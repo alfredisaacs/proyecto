@@ -1,0 +1,65 @@
+import {User,Project} from '../db/dbConnector.js'
+
+/**
+* GraphQL Resolvers
+**/
+
+export const resolvers={
+    Query:{
+            getAllUsers:(root)=>{
+                return new Promise((resolve,reject)=>{
+                    User.find((err,user)=>{
+                        if(err) reject(err);
+                        else resolve(user);
+                    })
+                })
+            },
+            findAProject:(root,{id})=>{
+                return new Promise((resolve,reject)=>{
+                    Project.findOne({_id:id},(err,project)=>{
+                    if(err) reject(err);
+                    else resolve(project);
+                })
+            })
+        }
+    },
+    Mutation:{
+        createUser: (root,{ input }) => {
+            const newUser=new User({
+                firstName : input.firstName,
+                lastName : input.lastName,
+                password : input.password,
+                email : input.email,
+                idNumber : input.idNumber,
+                role : input.role,
+                state : input.state,
+                leader : input.leader
+            });
+
+            newUser.id=newUser._id;
+
+            return new Promise((resolve,reject)=>{
+                newUser.save((err)=>{
+                    if(err) reject(err);
+                    else resolve(newUser);
+                })
+            })
+        },
+        addAProject:(root,{project})=>{
+            const newProject=new Project({
+                name:project.name,
+                budget:project.budget,
+                status:project.status
+            });
+
+            newProject.id=project._id;
+
+            return new Promise((resolve,reject)=>{
+                newProject.save(err=>{
+                    if(err) reject(err);
+                    resolve(newProject);
+                })
+            })
+        },
+    },
+};

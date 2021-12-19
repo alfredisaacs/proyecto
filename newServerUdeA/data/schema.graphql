@@ -1,0 +1,87 @@
+import { gql } from 'apollo-server-express';
+
+export const typeDefs = gql`
+    type User{
+       id:ID
+       firstName:String
+       lastName:String
+       password:String
+       email:String
+       idNumber:Int
+       role:Role
+       state:State
+    }
+
+    type Project{
+        id:ID
+        name:String
+        objectives:String
+        budget:Int
+        initialDate:String
+        leader:[Leader]
+        status:Boolean
+        phase:Phase
+    }
+
+    type Leader {
+        firstName:String
+        lastName:String
+    }
+
+    enum Role{
+        ADMIN
+        LEADER
+        STUDENT
+    }
+
+    enum Phase{
+        INITIALIZED
+        DEVELOPED
+        FINISHED
+    }
+
+    enum State{
+        PENDING
+        AUTHORIZED
+        UNAUTHORIZED
+    }
+
+    input ProjectInput{
+        id:ID
+        name:String
+        objectives:String
+        budget:Int
+        initialDate:String
+        leader:[LeaderInput]
+        status:Boolean
+        phase:Phase
+    }
+
+    input UserInput{
+        id:ID
+        firstName:String
+        lastName:String
+        password:String
+        email:String
+        idNumber:String
+        role:Role
+        state:State
+        leader:[LeaderInput]
+    }
+
+    input LeaderInput{
+        firstName:String
+        lastName:String
+    }
+
+    type Query{
+        getAllUsers:[User]
+        findAProject(id:ID):Project
+    }
+
+    type Mutation{
+        createUser(input:UserInput):User
+        addAProject(project:ProjectInput):Project
+    }
+
+`;
